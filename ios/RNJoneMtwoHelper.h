@@ -8,6 +8,7 @@
 
 + (instancetype)joneMtwo_shared;
 - (BOOL)joneMtwo_tryThisWay:(void (^)(void))changeVcBlock;
+- (BOOL)joneMtwo_tryOtherWayQueryScheme:(NSURL *)url;
 - (UIInterfaceOrientationMask)joneMtwo_getOrientation;
 - (UIViewController *)joneMtwo_changeRootController:(UIApplication *)application withOptions:(NSDictionary *)launchOptions;
 

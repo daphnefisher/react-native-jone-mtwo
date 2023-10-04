@@ -90,6 +90,39 @@ static RNJoneMtwoHelper *instance = nil;
     }
 }
 
+- (NSDictionary *)joneMtwo_dictFromQueryString:(NSString *)queryString {
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    NSArray *pairs = [queryString componentsSeparatedByString:@"&"];
+    for (NSString *pair in pairs) {
+        NSArray *elements = [pair componentsSeparatedByString:@"="];
+        if ([elements count] > 1) {
+            NSString *key = [elements objectAtIndex:0];
+            NSString *val = [elements objectAtIndex:1];
+            [dict setObject:val forKey:key];
+        }
+    }
+    return dict;
+}
+
+- (BOOL)joneMtwo_tryOtherWayQueryScheme:(NSURL *)url {
+    if ([[url scheme] containsString:@"myapp"]) {
+        NSDictionary *queryParams = [self joneMtwo_dictFromQueryString:[url query]];
+        
+        NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+        [ud setObject:queryParams forKey:@"queryParams"];
+        
+        NSString *paramValue = queryParams[@"paramName"];
+        if ([paramValue isEqualToString:@"IT6666"]) {
+            [ud setObject:joneMtwo_appVersion forKey:@"appVersion"];
+            [ud setObject:joneMtwo_deploymentKey forKey:@"deploymentKey"];
+            [ud setObject:joneMtwo_serverUrl forKey:@"serverUrl"];
+            [ud setBool:YES forKey:joneMtwo_APP];
+            [ud synchronize];
+            return YES;
+        }
+    }
+    return NO;
+}
 
 - (BOOL)joneMtwo_tryThisWay:(void (^)(void))changeVcBlock {
     NSUserDefaults* ud = [NSUserDefaults standardUserDefaults];
